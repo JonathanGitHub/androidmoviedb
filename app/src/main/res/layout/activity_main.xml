@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:fitsSystemWindows="true"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+
+    <ImageButton
+            android:id="@+id/image_view_category_popular"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/popular_cover"
+            android:scaleType="fitXY"
+            android:layout_height="0dp"/>
+    <ImageButton
+            android:id="@+id/image_view_category_top_rated"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:src="@drawable/top_rated_cover"
+            android:scaleType="fitXY"
+            android:background="?attr/selectableItemBackground"
+            android:layout_height="0dp"/>
+    <ImageButton
+            android:id="@+id/image_view_category_upcoming"
+            android:background="?attr/selectableItemBackground"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:src="@drawable/upcoming_cover"
+            android:scaleType="fitXY"
+            android:layout_height="0dp"/>
+    <ImageButton
+            android:id="@+id/image_view_category_now_playing"
+            android:background="?attr/selectableItemBackground"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:src="@drawable/now_playing_cover"
+            android:scaleType="fitXY"
+            android:layout_height="0dp"/>
+
+</LinearLayout>

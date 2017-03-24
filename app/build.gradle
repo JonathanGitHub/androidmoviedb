@@ -4,6 +4,9 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
+        // Enabling multidex support.
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
         applicationId "advancedse.itu.jianyang.themoviedb"
         minSdkVersion 15
         targetSdkVersion 25
