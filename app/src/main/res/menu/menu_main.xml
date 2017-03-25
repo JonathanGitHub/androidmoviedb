@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
     <item
-            android:id="@+id/miCompose"
-            android:icon="@color/colorAccent"
-            app:showAsAction="ifRoom"
-            android:title="Compose">
-    </item>
+            android:id="@+id/menu_popular"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:orderInCategory="200"
+            android:title="@string/popular_menu"/>
+
     <item
-            android:id="@+id/miProfile"
-            android:icon="@color/colorPrimaryDark"
-            app:showAsAction="ifRoom|withText"
-            android:title="Profile">
-    </item>
+            android:id="@+id/menu_top_rated"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:orderInCategory="200"
+            android:title="@string/top_rated_menu"/>
+
+    <item
+            android:id="@+id/menu_upcoming"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:orderInCategory="200"
+            android:title="@string/upcoming_menu"/>
+
+    <item
+            android:id="@+id/menu_playing"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:orderInCategory="200"
+            android:title="@string/now_playing_menu"/>
+
+    <item
+            android:id="@+id/menu_favorite"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:orderInCategory="200"
+            android:title="@string/my_favorite_menu"/>
 </menu>

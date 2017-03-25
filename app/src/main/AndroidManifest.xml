@@ -18,6 +18,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.MovieListActivity"/>
+        <activity android:name=".activities.FavoriteMovieListActivity"/>
+        <activity android:name=".activities.MovieDetailActivity"/>
+
     </application>
 
 </manifest>

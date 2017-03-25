@@ -5,7 +5,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-
+    <!-- Load the toolbar here -->
+    <include
+            layout="@layout/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     <ImageButton
             android:id="@+id/image_view_category_popular"
