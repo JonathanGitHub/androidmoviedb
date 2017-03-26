@@ -29,11 +29,15 @@ public class MovieDBAPIConstants {
 
     public static String API_KEY = "api_key=";
 
-    public static String API_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
+    public static String API_BASE_URL = "https://api.themoviedb.org/3/movie/";
 
-    public static String API_SORT_BY_POPULARITY = "sort_by=popularity.desc&";
+    public static String API_SORT_BY_POPULARITY = "popular?";
 
-    public static String API_SORT_BY_RATINGS = "sort_by=vote_average.desc&";
+    public static String API_SORT_BY_RATINGS = "top_rated?";
+
+    public static String API_SORT_BY_UNCOMING = "upcoming?";
+
+    public static String API_SORT_BY_PLAYING = "now_playing?";
 
     public static String DATA_KEY = "dataKey";
 

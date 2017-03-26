@@ -4,10 +4,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/card_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         card_view:cardUseCompatPadding="true"
         card_view:cardCornerRadius="8dp"
-        android:layout_marginBottom="16dp">
+>
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -16,21 +16,44 @@
         <ImageView
                 android:id="@+id/movie_thumb_nail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY" />
+                android:layout_height="280dp"
+                android:scaleType="fitXY"/>
 
-        <TextView
-                android:id="@+id/movie_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="#ffffff"
-                android:layout_below="@+id/movie_thumb_nail"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
-                android:gravity="center_horizontal"
+        <LinearLayout
+
                 android:layout_alignParentBottom="true"
-                android:background="#1976D2"/>
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
+                android:orientation="horizontal"
+                android:background="@drawable/rating_fav_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+
+            <TextView
+                    android:id="@+id/movie_title"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="5"
+                    android:textSize="16sp"
+                    android:textColor="#ffffff"
+                    android:padding="1dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"/>
+
+            <ImageView
+                    android:id="@+id/add_to_favorite"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="24dp"
+                    android:paddingTop="4dp"
+                    android:src="@drawable/white_hallow_heart"
+                    android:scaleType="fitCenter"
+            />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

@@ -24,6 +24,7 @@ public class MovieListRecylerViewAdapter extends RecyclerView.Adapter<MovieListR
 
 
     private List<Movie> movieList;
+
     private Context context;
 
     public static String API_BASE_URL = "http://image.tmdb.org/t/p/w185/";
@@ -52,7 +53,7 @@ public class MovieListRecylerViewAdapter extends RecyclerView.Adapter<MovieListR
     @Override
     public void onBindViewHolder(MovieListRecyclerViewHolder holder, final int position) {
         Picasso.with(context).load(API_BASE_URL + movieList.get(position).getPosterRelativePath()).into(holder.movieThumbnail);
-        holder.movieTitle.setText(movieList.get(position).getTitle());
+        holder.movieTitle.setText(movieList.get(position).getVoteAverage() + " / 10");
 
         holder.movieThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override

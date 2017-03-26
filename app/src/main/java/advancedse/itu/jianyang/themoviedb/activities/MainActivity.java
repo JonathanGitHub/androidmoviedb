@@ -15,16 +15,18 @@ import advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants;
 
 /**
  * Created by JianYang on 3/23/17.
- *
- *
  */
 
 public class MainActivity extends AppCompatActivity {
 
     ImageButton imageButtonPopular;
+
     ImageButton imageButtonTopRated;
+
     ImageButton imageButtonUpcoming;
+
     ImageButton imageButtonPlaying;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         imageButtonTopRated = (ImageButton) findViewById(R.id.image_view_category_top_rated);
         imageButtonUpcoming = (ImageButton) findViewById(R.id.image_view_category_upcoming);
         imageButtonPlaying = (ImageButton) findViewById(R.id.image_view_category_now_playing);
-
 
         imageButtonPopular.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,8 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MovieListActivity.class);
 
-
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
 
             case R.id.menu_favorite:
 //                setFragmentTitle(R.string.favorites);
@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
                 intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.TOP_RATED);
                 startActivity(intent);
-
 
                 return true;
             case R.id.menu_upcoming:
