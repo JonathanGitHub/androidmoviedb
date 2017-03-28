@@ -3,12 +3,9 @@ package advancedse.itu.jianyang.themoviedb.activities;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -16,19 +13,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import APIResponses.MovieListResponse;
 import advancedse.itu.jianyang.themoviedb.R;
 import advancedse.itu.jianyang.themoviedb.adapters.MovieListRecylerViewAdapter;
 import advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants;
-import advancedse.itu.jianyang.themoviedb.datamodels.Movie;
+import advancedse.itu.jianyang.themoviedb.datamodels.MovieListItem;
 
 import static advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants.API_SORT_BY_PLAYING;
 import static advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants.API_SORT_BY_POPULARITY;
@@ -44,11 +41,17 @@ public class MovieListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
-    private ArrayList<Movie> movieList = new ArrayList<>();
+    private UltimateRecyclerView ultimateRecyclerView;
+
+    private ArrayList<MovieListItem> movieListItemList = new ArrayList<>();
 
     private String tooBarTitle = "";
 
     private String movieCategoryUrl = "";
+
+//    private ShimmerFrameLayout shimmerFrameLayout;
+//
+//    private AVLoadingIndicatorView progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +69,6 @@ public class MovieListActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.drawable.back_button);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-
         getSupportActionBar().setTitle(tooBarTitle);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +80,25 @@ public class MovieListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 
+//        progressBar = (AVLoadingIndicatorView)findViewById(R.id.progressBar);
+
         StaggeredGridLayoutManager gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         recyclerView.setLayoutManager(gaggeredGridLayoutManager);
 
         fetchDataAndPopulateObject(movieCategoryUrl);
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void determineMovieListCategory() {
@@ -108,77 +124,114 @@ public class MovieListActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // Save the data when configuration changes
-        outState.putParcelableArrayList(DATA_KEY, movieList);
+        outState.putParcelableArrayList(DATA_KEY, movieListItemList);
         super.onSaveInstanceState(outState);
     }
 
     // fetchData asynchronously with Ion lib based on different endpoints
     private void fetchDataAndPopulateObject(String url) {
-        // Make http call and process response
+
         Ion.with(this)
             .load(url)
-            .asJsonObject()
-            .setCallback(new FutureCallback<JsonObject>() {
+            .asString()
+            .setCallback(new FutureCallback<String>() {
                 @Override
-                public void onCompleted(Exception e, JsonObject result) {
-                    // do stuff with the result or error
+                public void onCompleted(Exception e, String result) {
                     if (result != null) {
-                        // Remove mProgressBar after network callback
-                        //mProgressBar.setVisibility(View.INVISIBLE);
+                        movieListItemList = MovieListResponse.parseJSON(result).getMovieList();
+                        // If there is any movies
+                        if (movieListItemList.size() > 0) {
+                            // Adding items to gridView
+                            MovieListRecylerViewAdapter adapter =
+                                new MovieListRecylerViewAdapter(movieListItemList, getApplicationContext());
+                            recyclerView.setAdapter(adapter);
 
-                        // Clear previous data if there is any
-                        movieList.clear();
-                        recyclerView.setAdapter(null);
-
-                        try {
-                            // find the results and populate
-                            if (result.getAsJsonArray(MovieDBAPIConstants.JSON_RESULTS) != null) {
-                                JsonArray results = result.getAsJsonArray(MovieDBAPIConstants.JSON_RESULTS);
-
-                                // find the results and populate
-                                for (int i = 0; i < results.size(); i++) {
-                                    Movie movie = new Movie();
-
-                                    JsonObject jsonObject = results.get(i).getAsJsonObject();
-
-                                    movie.setId(parseJson(jsonObject, MovieDBAPIConstants.JSON_ID));
-                                    movie.setTitle(parseJson(jsonObject, MovieDBAPIConstants.JSON_TITLE));
-                                    movie.setReleaseDate(parseJson(jsonObject, MovieDBAPIConstants.JSON_RELEASE_DATE));
-                                    movie.setOverview(parseJson(jsonObject, MovieDBAPIConstants.JSON_OVERVIEW));
-                                    movie.setVoteAverage(parseJson(jsonObject, MovieDBAPIConstants.JSON_VOTE_AVERAGE));
-                                    movie.setPopularity(parseJson(jsonObject, MovieDBAPIConstants.JSON_POPULARITY));
-                                    movie.setPosterRelativePath(parseJson(jsonObject, MovieDBAPIConstants.JSON_POSTER_RELATIVE_PATH));
-
-                                    movieList.add(movie);
-                                }
-                                // If there is any movies
-                                if (movieList.size() > 0) {
-                                    // Adding items to gridView
-                                    MovieListRecylerViewAdapter adapter =
-                                        new MovieListRecylerViewAdapter(movieList, getApplicationContext());
-                                    recyclerView.setAdapter(adapter);
-                                }
-                                // Display empty data toast
-                                else {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.no_data_message), Toast.LENGTH_LONG)
-                                        .show();
-                                }
-                            } else {
-                                Toast.makeText(getApplicationContext(), getString(R.string.no_data_message), Toast.LENGTH_LONG)
-                                    .show();
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            Toast.makeText(getApplicationContext(), getString(R.string.server_error_message), Toast.LENGTH_LONG)
+                        }// Display empty data toast
+                        else {
+                            Toast.makeText(getApplicationContext(), getString(R.string.no_data_message), Toast.LENGTH_LONG)
                                 .show();
                         }
                     } else {
-                        // Remove mProgressBar
+
                         // mProgressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(getApplicationContext(), getString(R.string.no_data_message), Toast.LENGTH_LONG).show();
                     }
+
+
                 }
             });
+
+//        // Make http call and process response
+//        Ion.with(this)
+//            .load(url)
+//            .asJsonObject()
+//            .setCallback(new FutureCallback<JsonObject>() {
+//                @Override
+//                public void onCompleted(Exception e, JsonObject result) {
+//                    // do stuff with the result or error
+//                    if (result != null) {
+//                        // Remove mProgressBar after network callback
+//                        //mProgressBar.setVisibility(View.INVISIBLE);
+//
+//                        // Clear previous data if there is any
+//                        movieListItemList.clear();
+//                        recyclerView.setAdapter(null);
+//
+//
+////                        progressBar.hide();
+////                        shimmerFrameLayout.stopShimmerAnimation();
+//
+//                        try {
+//                            // find the results and populate
+//                            if (result.getAsJsonArray(MovieDBAPIConstants.JSON_RESULTS) != null) {
+//                                JsonArray results = result.getAsJsonArray(MovieDBAPIConstants.JSON_RESULTS);
+//
+//                                // find the results and populate
+//                                for (int i = 0; i < results.size(); i++) {
+//                                    MovieListItem movieListItem = new MovieListItem();
+//
+//                                    JsonObject jsonObject = results.get(i).getAsJsonObject();
+//
+//                                    movieListItem.setId(parseJson(jsonObject, MovieDBAPIConstants.JSON_ID));
+//                                    movieListItem.setTitle(parseJson(jsonObject, MovieDBAPIConstants.JSON_TITLE));
+//                                    movieListItem.setReleaseDate(parseJson(jsonObject, MovieDBAPIConstants.JSON_RELEASE_DATE));
+//                                    movieListItem.setOverview(parseJson(jsonObject, MovieDBAPIConstants.JSON_OVERVIEW));
+//                                    movieListItem.setVoteAverage(parseJson(jsonObject, MovieDBAPIConstants.JSON_VOTE_AVERAGE));
+//                                    movieListItem.setPopularity(parseJson(jsonObject, MovieDBAPIConstants.JSON_POPULARITY));
+//                                    movieListItem.setPosterRelativePath(parseJson(jsonObject, MovieDBAPIConstants.JSON_POSTER_RELATIVE_PATH));
+//
+//                                    movieListItemList.add(movieListItem);
+//                                }
+//                                // If there is any movies
+//                                if (movieListItemList.size() > 0) {
+//                                    // Adding items to gridView
+//                                    MovieListRecylerViewAdapter adapter =
+//                                        new MovieListRecylerViewAdapter(movieListItemList, getApplicationContext());
+//                                    recyclerView.setAdapter(adapter);
+//
+//
+//                                }
+//                                // Display empty data toast
+//                                else {
+//                                    Toast.makeText(getApplicationContext(), getString(R.string.no_data_message), Toast.LENGTH_LONG)
+//                                        .show();
+//                                }
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), getString(R.string.no_data_message), Toast.LENGTH_LONG)
+//                                    .show();
+//                            }
+//                        } catch (Exception exception) {
+//                            exception.printStackTrace();
+//                            Toast.makeText(getApplicationContext(), getString(R.string.server_error_message), Toast.LENGTH_LONG)
+//                                .show();
+//                        }
+//                    } else {
+//                        // Remove mProgressBar
+//                        // mProgressBar.setVisibility(View.INVISIBLE);
+//                        Toast.makeText(getApplicationContext(), getString(R.string.no_data_message), Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            });
 
     }
 
@@ -214,8 +267,10 @@ public class MovieListActivity extends AppCompatActivity {
 //                favoriteListFragment = new FavoriteListFragment();
 //                switchContent(favoriteListFragment, FavoriteListFragment.TAG);
 
-                intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.NOW_PLAYING);
-                startActivity(intent);
+                if (!tooBarTitle.equalsIgnoreCase(getString(R.string.now_playing_menu))) {
+                    intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.NOW_PLAYING);
+                    startActivity(intent);
+                }
 
                 return true;
             case R.id.menu_popular:
@@ -223,8 +278,10 @@ public class MovieListActivity extends AppCompatActivity {
 //                favoriteListFragment = new FavoriteListFragment();
 //                switchContent(favoriteListFragment, FavoriteListFragment.TAG);
 
-                intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.POPULAR);
-                startActivity(intent);
+                if (!tooBarTitle.equalsIgnoreCase(getString(R.string.popular_menu))) {
+                    intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.POPULAR);
+                    startActivity(intent);
+                }
 
                 return true;
             case R.id.menu_top_rated:
@@ -232,8 +289,10 @@ public class MovieListActivity extends AppCompatActivity {
 //                favoriteListFragment = new FavoriteListFragment();
 //                switchContent(favoriteListFragment, FavoriteListFragment.TAG);
 
-                intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.TOP_RATED);
-                startActivity(intent);
+                if (!tooBarTitle.equalsIgnoreCase(getString(R.string.top_rated_menu))) {
+                    intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.TOP_RATED);
+                    startActivity(intent);
+                }
 
                 return true;
             case R.id.menu_upcoming:
@@ -241,8 +300,11 @@ public class MovieListActivity extends AppCompatActivity {
 //                favoriteListFragment = new FavoriteListFragment();
 //                switchContent(favoriteListFragment, FavoriteListFragment.TAG);
 
-                intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.UPCOMING);
-                startActivity(intent);
+                if (!tooBarTitle.equalsIgnoreCase(getString(R.string.upcoming_menu))) {
+                    intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.UPCOMING);
+                    startActivity(intent);
+                }
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

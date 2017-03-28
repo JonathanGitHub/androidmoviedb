@@ -4,27 +4,29 @@ package advancedse.itu.jianyang.themoviedb.datamodels;
  * Created by jianyang on 3/24/17.
  */
 
+import com.google.gson.annotations.SerializedName;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by JianYang on 12/3/15.
- */
-public class Movie implements Parcelable {
+public class MovieListItem implements Parcelable {
+
     private String id;
     private String overview;
     private String releaseDate;
+    @SerializedName("poster_path")
     private String posterRelativePath;
     private String title;
     private String popularity;
+    @SerializedName("vote_average")
     private String voteAverage;
 
 
-    public Movie() {
+    public MovieListItem() {
 
     }
 
-    public Movie(String id, String overview, String releaseDate, String posterRelativePath, String title, String popularity,
+    public MovieListItem(String id, String overview, String releaseDate, String posterRelativePath, String title, String popularity,
         String voteAverage) {
         this.id = id;
         this.overview = overview;
@@ -93,7 +95,7 @@ public class Movie implements Parcelable {
 
     @Override
     public String toString() {
-        return "Movie{" +
+        return "MovieListItem{" +
             "id='" + id + '\'' +
             ", overview='" + overview + '\'' +
             ", releaseDate='" + releaseDate + '\'' +
@@ -109,9 +111,9 @@ public class Movie implements Parcelable {
         return 0;
     }
 
-    // Parcelling part, since our Movie is a customized class so if we wanna retain this object when user
+    // Parcelling part, since our MovieListItem is a customized class so if we wanna retain this object when user
     // rotates screen, we must implements Parcelable interface
-    public Movie(Parcel in)
+    public MovieListItem(Parcel in)
     {
         String[] data = new String[7];
         in.readStringArray(data);
@@ -135,15 +137,15 @@ public class Movie implements Parcelable {
     {
 
         @Override
-        public Movie createFromParcel(Parcel source)
+        public MovieListItem createFromParcel(Parcel source)
         {
-            return new Movie(source);
+            return new MovieListItem(source);
         }
 
         @Override
-        public Movie[] newArray(int size)
+        public MovieListItem[] newArray(int size)
         {
-            return new Movie[size];
+            return new MovieListItem[size];
         }
     };
 }
