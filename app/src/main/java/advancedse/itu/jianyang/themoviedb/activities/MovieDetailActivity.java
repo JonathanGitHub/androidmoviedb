@@ -233,13 +233,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
             });
 
+
         for (MovieListItem item : movieListItemList) {
             if (item.getId().equalsIgnoreCase(id)) {
                 imageViewFavorite.setImageResource(R.drawable.pink_solid_heart);
                 imageViewFavorite.setTag(RED_KEY);
-            } else {
-                imageViewFavorite.setImageResource(R.drawable.pink_hallow_heart);
-                imageViewFavorite.setTag(WHITE_KEY);
             }
         }
 
