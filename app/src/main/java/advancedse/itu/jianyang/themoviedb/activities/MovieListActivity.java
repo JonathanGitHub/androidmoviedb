@@ -1,6 +1,5 @@
 package advancedse.itu.jianyang.themoviedb.activities;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import android.content.Intent;
@@ -25,7 +24,7 @@ import APIResponses.MovieListResponse;
 import advancedse.itu.jianyang.themoviedb.R;
 import advancedse.itu.jianyang.themoviedb.adapters.MovieListRecylerViewAdapter;
 import advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants;
-import advancedse.itu.jianyang.themoviedb.datamodels.MovieListItem;
+import advancedse.itu.jianyang.themoviedb.datamodels.MovieList.MovieListItem;
 
 import static advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants.API_SORT_BY_PLAYING;
 import static advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants.API_SORT_BY_POPULARITY;
@@ -143,7 +142,7 @@ public class MovieListActivity extends AppCompatActivity {
                         if (movieListItemList.size() > 0) {
                             // Adding items to gridView
                             MovieListRecylerViewAdapter adapter =
-                                new MovieListRecylerViewAdapter(movieListItemList, getApplicationContext());
+                                new MovieListRecylerViewAdapter(movieListItemList, MovieListActivity.this);
                             recyclerView.setAdapter(adapter);
 
                         }// Display empty data toast

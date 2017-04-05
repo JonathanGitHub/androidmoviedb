@@ -1,4 +1,4 @@
-package advancedse.itu.jianyang.themoviedb.datamodels;
+package advancedse.itu.jianyang.themoviedb.datamodels.MovieList;
 
 /**
  * Created by jianyang on 3/24/17.
@@ -13,13 +13,17 @@ public class MovieListItem implements Parcelable {
 
     private String id;
     private String overview;
+    @SerializedName("release_date")
     private String releaseDate;
     @SerializedName("poster_path")
     private String posterRelativePath;
+    @SerializedName("backdrop_path")
+    private String backDropPath;
     private String title;
     private String popularity;
     @SerializedName("vote_average")
     private String voteAverage;
+
 
 
     public MovieListItem() {
@@ -27,7 +31,7 @@ public class MovieListItem implements Parcelable {
     }
 
     public MovieListItem(String id, String overview, String releaseDate, String posterRelativePath, String title, String popularity,
-        String voteAverage) {
+        String voteAverage, String backDropPath) {
         this.id = id;
         this.overview = overview;
         this.releaseDate = releaseDate;
@@ -35,6 +39,16 @@ public class MovieListItem implements Parcelable {
         this.title = title;
         this.popularity = popularity;
         this.voteAverage = voteAverage;
+        this.backDropPath = backDropPath;
+    }
+
+
+    public String getBackDropPath() {
+        return backDropPath;
+    }
+
+    public void setBackDropPath(String backDropPath) {
+        this.backDropPath = backDropPath;
     }
 
     public String getId() {
@@ -100,6 +114,7 @@ public class MovieListItem implements Parcelable {
             ", overview='" + overview + '\'' +
             ", releaseDate='" + releaseDate + '\'' +
             ", posterRelativePath='" + posterRelativePath + '\'' +
+            ", posterRelativePath='" + backDropPath + '\'' +
             ", title='" + title + '\'' +
             ", voteAverage=" + voteAverage +
             ", popularity=" + popularity +
@@ -115,7 +130,7 @@ public class MovieListItem implements Parcelable {
     // rotates screen, we must implements Parcelable interface
     public MovieListItem(Parcel in)
     {
-        String[] data = new String[7];
+        String[] data = new String[8];
         in.readStringArray(data);
         this.id = data[0];
         this.overview = data[1];
@@ -124,12 +139,13 @@ public class MovieListItem implements Parcelable {
         this.title = data[4];
         this.popularity = data[5];
         this.voteAverage = data[6];
+        this.backDropPath = data[7];
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeStringArray(new String[]{
-            this.id, this.overview, this.releaseDate, this.posterRelativePath, this.title, this.popularity, this.voteAverage
+            this.id, this.overview, this.releaseDate, this.posterRelativePath, this.title, this.popularity, this.voteAverage, this.backDropPath
         });
     }
 

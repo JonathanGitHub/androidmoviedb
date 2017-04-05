@@ -14,7 +14,7 @@ import java.util.List;
 import advancedse.itu.jianyang.themoviedb.R;
 import advancedse.itu.jianyang.themoviedb.activities.MovieDetailActivity;
 import advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants;
-import advancedse.itu.jianyang.themoviedb.datamodels.MovieListItem;
+import advancedse.itu.jianyang.themoviedb.datamodels.MovieList.MovieListItem;
 
 /**
  * Created by jianyang on 3/24/17.
@@ -27,7 +27,9 @@ public class MovieListRecylerViewAdapter extends RecyclerView.Adapter<MovieListR
 
     private Context context;
 
-    public static String API_BASE_URL = "http://image.tmdb.org/t/p/w185/";
+    public static String MOVIE_IMAGE_BASE_URL_W_185 = "http://image.tmdb.org/t/p/w185/";
+
+    public static String MOVIE_IMAGE_BASE_URL_W_500 = "http://image.tmdb.org/t/p/w500/";
 
 
     public MovieListRecylerViewAdapter(List<MovieListItem> movieListItemList, Context context) {
@@ -52,18 +54,20 @@ public class MovieListRecylerViewAdapter extends RecyclerView.Adapter<MovieListR
      */
     @Override
     public void onBindViewHolder(MovieListRecyclerViewHolder holder, final int position) {
-        Picasso.with(context).load(API_BASE_URL + movieListItemList.get(position).getPosterRelativePath()).into(holder.movieThumbnail);
+        Picasso.with(context).load(MOVIE_IMAGE_BASE_URL_W_185 + movieListItemList.get(position).getPosterRelativePath()).into(holder.movieThumbnail);
         holder.movieTitle.setText(movieListItemList.get(position).getVoteAverage() + " / 10");
 
         holder.movieThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.putExtra(MovieDBAPIConstants.JSON_ID, movieListItemList.get(position).getId());
                 intent.putExtra(MovieDBAPIConstants.JSON_POSTER_RELATIVE_PATH, movieListItemList.get(position).getPosterRelativePath());
                 intent.putExtra(MovieDBAPIConstants.JSON_TITLE, movieListItemList.get(position).getTitle());
                 intent.putExtra(MovieDBAPIConstants.JSON_OVERVIEW, movieListItemList.get(position).getOverview());
                 intent.putExtra(MovieDBAPIConstants.JSON_RELEASE_DATE, movieListItemList.get(position).getReleaseDate());
                 intent.putExtra(MovieDBAPIConstants.JSON_VOTE_AVERAGE, movieListItemList.get(position).getVoteAverage());
+                intent.putExtra(MovieDBAPIConstants.JSON_BACK_DROP_PATH, movieListItemList.get(position).getBackDropPath());
 
                 context.startActivity(intent);
 

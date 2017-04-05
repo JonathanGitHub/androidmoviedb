@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-import advancedse.itu.jianyang.themoviedb.datamodels.MovieListItem;
+import advancedse.itu.jianyang.themoviedb.datamodels.MovieList.MovieListItem;
 
 /**
  * Created by jianyang on 3/28/17.

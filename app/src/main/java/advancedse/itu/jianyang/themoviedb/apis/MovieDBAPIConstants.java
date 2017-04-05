@@ -23,6 +23,8 @@ public class MovieDBAPIConstants {
 
     public static String JSON_POPULARITY = "popularity";
 
+    public static String JSON_BACK_DROP_PATH = "backdrop_path";
+
     public static String JSON_RELEASE_DATE = "release_date";
 
     public static String JSON_POSTER_RELATIVE_PATH = "poster_path";
@@ -30,6 +32,8 @@ public class MovieDBAPIConstants {
     public static String API_KEY = "api_key=";
 
     public static String API_BASE_URL = "https://api.themoviedb.org/3/movie/";
+
+    public static String API_MOVIE_VIDEOS_PARAM = "/videos?";
 
     public static String API_SORT_BY_POPULARITY = "popular?";
 
