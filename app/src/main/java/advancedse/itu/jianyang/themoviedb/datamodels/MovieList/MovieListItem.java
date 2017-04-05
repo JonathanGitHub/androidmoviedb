@@ -164,4 +164,9 @@ public class MovieListItem implements Parcelable {
             return new MovieListItem[size];
         }
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof MovieListItem && getId().equalsIgnoreCase(((MovieListItem) obj).getId());
+    }
 }

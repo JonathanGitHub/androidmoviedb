@@ -2,6 +2,7 @@ package advancedse.itu.jianyang.themoviedb.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Movie;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +10,14 @@ import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import advancedse.itu.jianyang.themoviedb.R;
 import advancedse.itu.jianyang.themoviedb.activities.MovieDetailActivity;
 import advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants;
 import advancedse.itu.jianyang.themoviedb.datamodels.MovieList.MovieListItem;
+import advancedse.itu.jianyang.themoviedb.storage.SharedPreference;
 
 /**
  * Created by jianyang on 3/24/17.
@@ -25,16 +28,26 @@ public class MovieListRecylerViewAdapter extends RecyclerView.Adapter<MovieListR
 
     private List<MovieListItem> movieListItemList;
 
+    private SharedPreference sharedPreference;
+
     private Context context;
+
+    public static final String WHITE_KEY = "white";
+
+    public static final String RED_KEY = "red";
 
     public static String MOVIE_IMAGE_BASE_URL_W_185 = "http://image.tmdb.org/t/p/w185/";
 
     public static String MOVIE_IMAGE_BASE_URL_W_500 = "http://image.tmdb.org/t/p/w500/";
 
 
+
+
     public MovieListRecylerViewAdapter(List<MovieListItem> movieListItemList, Context context) {
         this.movieListItemList = movieListItemList;
         this.context = context;
+
+        sharedPreference = new SharedPreference();
     }
 
     @Override
@@ -53,9 +66,36 @@ public class MovieListRecylerViewAdapter extends RecyclerView.Adapter<MovieListR
      * @param position
      */
     @Override
-    public void onBindViewHolder(MovieListRecyclerViewHolder holder, final int position) {
+    public void onBindViewHolder(final MovieListRecyclerViewHolder holder, final int position) {
         Picasso.with(context).load(MOVIE_IMAGE_BASE_URL_W_185 + movieListItemList.get(position).getPosterRelativePath()).into(holder.movieThumbnail);
         holder.movieTitle.setText(movieListItemList.get(position).getVoteAverage() + " / 10");
+
+
+        if (checkFavoriteItem(movieListItemList.get(position))) {
+            holder.add_to_favorite.setImageResource(R.drawable.white_solid_heart);
+            holder.add_to_favorite.setTag(RED_KEY);
+        } else {
+            holder.add_to_favorite.setImageResource(R.drawable.white_hallow_heart);
+            holder.add_to_favorite.setTag(WHITE_KEY);
+        }
+
+
+        holder.add_to_favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String tag = view.getTag().toString();
+                if (tag.equalsIgnoreCase(WHITE_KEY)) {
+                    sharedPreference.addFavorite(context, movieListItemList.get(position));
+                    holder.add_to_favorite.setTag(RED_KEY);
+                    holder.add_to_favorite.setImageResource(R.drawable.white_solid_heart);
+                } else {
+                    sharedPreference.removeFavorite(context, movieListItemList.get(position));
+                    holder.add_to_favorite.setTag(WHITE_KEY);
+                    holder.add_to_favorite.setImageResource(R.drawable.white_hallow_heart);
+                }
+            }
+        });
+
 
         holder.movieThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,4 +119,22 @@ public class MovieListRecylerViewAdapter extends RecyclerView.Adapter<MovieListR
     public int getItemCount() {
         return movieListItemList.size();
     }
+
+
+
+    //check if movie is saved in my favorite list or not
+    public boolean checkFavoriteItem(MovieListItem movieListItemToCompare) {
+        boolean check = false;
+        ArrayList<MovieListItem> favorites = sharedPreference.getFavorites(context);
+        if (favorites != null) {
+            for (MovieListItem movieListItem : favorites) {
+                if (movieListItem.equals(movieListItemToCompare)) {
+                    check = true;
+                    break;
+                }
+            }
+        }
+        return check;
+    }
+
 }

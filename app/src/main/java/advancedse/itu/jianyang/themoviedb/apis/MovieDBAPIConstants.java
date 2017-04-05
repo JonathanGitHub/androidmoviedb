@@ -9,7 +9,7 @@ public class MovieDBAPIConstants {
     public static String CATEGORY_KEY = "category";
 
     public enum MOVIECATEGORY{
-        POPULAR, TOP_RATED, UPCOMING, NOW_PLAYING
+        POPULAR, TOP_RATED, UPCOMING, NOW_PLAYING, MY_FAVORITE
     }
     public static String JSON_RESULTS = "results";
 

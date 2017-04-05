@@ -2,9 +2,11 @@ package advancedse.itu.jianyang.themoviedb.activities;
 
 import com.google.gson.JsonObject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -20,11 +22,12 @@ import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 
 import java.util.ArrayList;
 
-import APIResponses.MovieListResponse;
+import advancedse.itu.jianyang.themoviedb.APIResponses.MovieListResponse;
 import advancedse.itu.jianyang.themoviedb.R;
 import advancedse.itu.jianyang.themoviedb.adapters.MovieListRecylerViewAdapter;
 import advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants;
 import advancedse.itu.jianyang.themoviedb.datamodels.MovieList.MovieListItem;
+import advancedse.itu.jianyang.themoviedb.storage.SharedPreference;
 
 import static advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants.API_SORT_BY_PLAYING;
 import static advancedse.itu.jianyang.themoviedb.apis.MovieDBAPIConstants.API_SORT_BY_POPULARITY;
@@ -40,17 +43,15 @@ public class MovieListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
-    private UltimateRecyclerView ultimateRecyclerView;
-
     private ArrayList<MovieListItem> movieListItemList = new ArrayList<>();
 
     private String tooBarTitle = "";
 
+    SharedPreference sharedPreference;
+    private ArrayList<MovieListItem> mFavoriteList = new ArrayList<>();
+
     private String movieCategoryUrl = "";
 
-//    private ShimmerFrameLayout shimmerFrameLayout;
-//
-//    private AVLoadingIndicatorView progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,13 +63,15 @@ public class MovieListActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        toolbar.setNavigationIcon(R.drawable.back_button);
+        toolbar.setNavigationIcon(R.drawable.back_button_16by16);
         // Display icon in the toolbar
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.back_button);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
+       getSupportActionBar().setTitle(tooBarTitle);
 
-        getSupportActionBar().setTitle(tooBarTitle);
+        //toolbar.setTitleMarginStart(24);
+
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,13 +82,52 @@ public class MovieListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 
-//        progressBar = (AVLoadingIndicatorView)findViewById(R.id.progressBar);
-
         StaggeredGridLayoutManager gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         recyclerView.setLayoutManager(gaggeredGridLayoutManager);
 
-        fetchDataAndPopulateObject(movieCategoryUrl);
 
+        if (!tooBarTitle.equalsIgnoreCase(getString(R.string.my_favorite_menu))){
+            fetchDataAndPopulateObject(movieCategoryUrl);
+        } else {
+            //Get favorite restaurants from sharedPrefs
+            sharedPreference = new SharedPreference();
+            mFavoriteList = sharedPreference.getFavorites(this);
+
+            if (mFavoriteList == null || mFavoriteList.isEmpty()) {
+//                showAlert(getResources().getString(R.string.no_favorites_items),
+//                    getResources().getString(R.string.no_favorites_msg));
+            } else {
+
+                // Adding items to gridView
+                MovieListRecylerViewAdapter adapter =
+                    new MovieListRecylerViewAdapter(mFavoriteList, MovieListActivity.this);
+                recyclerView.setAdapter(adapter);
+
+            }
+        }
+
+
+
+    }
+
+    //Show alert dialog if there is no favorite restaurant
+    public void showAlert(String title, String message) {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .create();
+            alertDialog.setTitle(title);
+            alertDialog.setMessage(message);
+            alertDialog.setCancelable(false);
+
+            // setting OK Button
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        getFragmentManager().popBackStackImmediate();
+                    }
+                });
+            alertDialog.show();
 
     }
 
@@ -116,6 +158,8 @@ public class MovieListActivity extends AppCompatActivity {
         } else if (moviecategory == MovieDBAPIConstants.MOVIECATEGORY.NOW_PLAYING) {
             movieCategoryUrl = MovieDBAPIConstants.API_BASE_URL + API_SORT_BY_PLAYING + MovieDBAPIConstants.API_KEY;
             tooBarTitle = getString(R.string.now_playing_menu);
+        } else if (moviecategory == MovieDBAPIConstants.MOVIECATEGORY.MY_FAVORITE) {
+            tooBarTitle = getString(R.string.my_favorite_menu);
         }
     }
 
@@ -260,6 +304,11 @@ public class MovieListActivity extends AppCompatActivity {
 //                setFragmentTitle(R.string.favorites);
 //                favoriteListFragment = new FavoriteListFragment();
 //                switchContent(favoriteListFragment, FavoriteListFragment.TAG);
+
+                intent.putExtra(MovieDBAPIConstants.CATEGORY_KEY, MovieDBAPIConstants.MOVIECATEGORY.MY_FAVORITE);
+                startActivity(intent);
+
+
                 return true;
             case R.id.menu_playing:
 //                setFragmentTitle(R.string.favorites);

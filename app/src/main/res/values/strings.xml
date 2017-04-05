@@ -7,4 +7,9 @@
     <string name="my_favorite_menu">My Movies</string>
     <string name="server_error_message">Server data type changed</string>
     <string name="no_data_message">Sorry the results is empty</string>
+
+    <string name="add_favorite">Added to Favorites</string>
+    <string name="remove_favorite">Removed from Favorites</string>
+    <string name="no_favorites_items">No Favorites</string>
+    <string name="no_favorites_msg">Please click on favorite button to save</string>
 </resources>

@@ -10,15 +10,28 @@
 
         <!-- Load the toolbar here -->
         <include
-                layout="@layout/toolbar_main"
+                layout="@layout/toolbar_movie_detail"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-        <ImageView android:layout_width="match_parent"
-                   android:layout_height="320dp"
-                   android:id="@+id/movie_back_drop"
-                   android:scaleType="centerCrop"/>
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+
+            <ImageView android:layout_width="match_parent"
+                       android:layout_height="320dp"
+                       android:id="@+id/movie_back_drop"
+                       android:scaleType="centerCrop"/>
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                       android:id="@+id/movie_play_button"
+                       android:background="@drawable/play_button"
+                       android:scaleType="fitCenter"
+                       android:focusable="false"
+                       android:layout_centerVertical="true"
+                       android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+
 
         <LinearLayout
                 android:id="@+id/ll_movie_title_section"
@@ -45,7 +58,7 @@
                        android:layout_marginTop="16dp"
                        android:scaleType="fitCenter"
                        android:background="@drawable/pink_hallow_heart"
-                       android:id="@+id/imageButton"/>
+                       android:id="@+id/movie_detail_favorite"/>
 
         </LinearLayout>
 
@@ -81,6 +94,7 @@
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
                       android:paddingTop="12dp"
+                      android:layout_marginBottom="24dp"
         >
 
 

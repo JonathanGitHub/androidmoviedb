@@ -1,4 +1,4 @@
-package APIResponses;
+package advancedse.itu.jianyang.themoviedb.APIResponses;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

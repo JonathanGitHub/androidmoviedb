@@ -15,6 +15,9 @@ Features to include in MVP:
 
 
 Post MVP:
+* Use smooth Activity UI transition
+* Use coordinatorLayout
+* Use EventBus or RxJava to asynchronously refresh UI when data changed in other parts of the app
 * Use Fragment to replace activities
 * Use ViewPager/Fragment so that users can swipe MovieDetails Page
 * Use Retrofit, replace Ion
